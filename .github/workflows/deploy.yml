@@ -1,0 +1,32 @@
+name: deploy
+on:
+  workflow_dispatch:
+    inputs:
+      party_id:
+        description: "Deploy Party ID"
+        required: false
+        default: ""
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "Deploying party ${{ inputs.party_id }} to staging (sha ${{ github.sha }})"
+          sleep 5
+          echo "Staging deploy complete"
+  approve-prod-deploy:
+    needs: staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "approval received for prod deploy"
+  prod:
+    needs: approve-prod-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "Deploying party ${{ inputs.party_id }} to prod"
+          sleep 5
+          echo "Prod deploy complete"

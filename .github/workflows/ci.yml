@@ -1,0 +1,18 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: |
+          echo "Building HEAD=${{ github.sha }}"
+          echo "Branch=${{ github.head_ref || github.ref_name }}"
+          # Real builds would go here. For the demo this always passes.
+          ls -la
